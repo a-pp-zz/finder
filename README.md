@@ -7,10 +7,11 @@
 
 ### Usage ###
 
-`
+```
+#!php
 $files = Finder::factory('/Users/coolswitcher/Sites/photo/storage')
 								->filter ('types', 'mov, avi')
 								->find('name');
 
 var_dump($files);
-`
+```
