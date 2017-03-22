@@ -1,0 +1,26 @@
+{
+    "name": "appzz/finder",
+    "description": "Find files,sort,filter uses iterators",
+    "type": "library",
+    "version": "1.0.0",
+    "keywords": [
+        "finder",
+        "find files"
+    ],
+    "homepage": "https://www.bitbucket.org/a-pp-zz/finder.git",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "CoolSwitcher",
+            "email": "ds@appzz.tech",
+            "role": "lead"
+        }
+    ],
+    "require": {
+        "php": ">=5.0.0",
+        "appzz/arr": "dev-master",
+    },
+    "autoload": {
+        "psr-4": {"AppZz\\Helpers\\": "src/"}
+    }
+}
