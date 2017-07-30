@@ -1,5 +1,5 @@
 <?php
-namespace AppZz\Helpers\Finder;
+namespace AppZz\Filesystem\Finder;
 use SplHeap;
 use Iterator;
 
@@ -20,7 +20,7 @@ class SorterIterator extends SplHeap {
 	}
 
 	public function compare($b, $a)
-	{     
+	{
 		switch ($this->_sortby)
 		{
 			case 'name':
@@ -38,7 +38,7 @@ class SorterIterator extends SplHeap {
 			  		$r = intval ($a->getMTime() < $b->getMTime());
 			  	if ( $r === 0)
 			  		$r = -1;
-			break;        	
+			break;
 		}
 
 		return $r;

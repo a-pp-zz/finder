@@ -2,7 +2,6 @@
     "name": "appzz/finder",
     "description": "Find files,sort,filter uses iterators",
     "type": "library",
-    "version": "1.0.0",
     "keywords": [
         "finder",
         "find files"
@@ -12,15 +11,15 @@
     "authors": [
         {
             "name": "CoolSwitcher",
-            "email": "ds@appzz.tech",
+            "email": "ds@appzz.pw",
             "role": "lead"
         }
     ],
     "require": {
         "php": ">=5.0.0",
-        "appzz/arr": "dev-master"
+        "appzz/arr": "1.*"
     },
     "autoload": {
-        "psr-4": {"AppZz\\Helpers\\": "src/"}
+        "psr-4": {"AppZz\\Filesystem\\": "src/"}
     }
 }

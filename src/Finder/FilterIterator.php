@@ -1,8 +1,8 @@
 <?php
-namespace AppZz\Helpers\Finder;
+namespace AppZz\Filesystem\Finder;
 use RecursiveFilterIterator;
 use AppZz\Helpers\Arr;
-use AppZz\Helpers\Finder;
+use AppZz\Filesystem\Finder;
 
 class FilterIterator extends RecursiveFilterIterator {
 
@@ -20,7 +20,7 @@ class FilterIterator extends RecursiveFilterIterator {
 		$hidden_files  = Arr::get(Finder::$filter, 'hidden_files', FALSE);
 
 		if ($this->current()->isFile())
-		{			
+		{
 			if ($hidden_files !== TRUE AND preg_match ('#^\..*#', $filename))
 				return FALSE;
 
@@ -34,16 +34,16 @@ class FilterIterator extends RecursiveFilterIterator {
 				return preg_match ($include_paths, basename($path));
 
 			if ($exclude_paths)
-				return ! preg_match ($exclude_paths, basename($path));						  	
-			
+				return ! preg_match ($exclude_paths, basename($path));
+
 			if ($types) {
 				$types = "#.*\.(" . implode ('|', $types) . ")$#iu";
 				return preg_match ($types, $filename);
 			}
 
 			return TRUE;
-		}	  	  	
-	  	
-	  	return TRUE;	  			  
+		}
+
+	  	return TRUE;
 	}
 }

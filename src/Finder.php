@@ -1,34 +1,34 @@
 <?php
-namespace AppZz\Helpers;
+namespace AppZz\Filesystem;
 
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use AppZz\Helpers\Finder\SorterIterator;
-use AppZz\Helpers\Finder\FilterIterator;
+use Finder\SorterIterator;
+use Finder\FilterIterator;
 
 /**
  * Search files, filter by types, sort items, ignore or not hidden files
  */
 class Finder {
-	
+
 	/**
 	 * Directory Operator Instance
 	 * @var object
 	 */
 	private $_dit;
-	
+
 	/**
 	 * Recursicive Iterator Instance
 	 * @var object
 	 */
 	private $_rit;
-	
+
 	/**
 	 * Max depth
 	 * @var integer
 	 */
 	private $_max_depth = -1;
-	
+
 	/**
 	 * Filter params
 	 * @var array
@@ -72,45 +72,45 @@ class Finder {
 			switch ($option)
 			{
 				case 'types':
-					
+
 					if (is_string ($value) AND strpos ($value, ','))
 					{
 						$value = explode (',', $value);
-						$value = array_map ('trim', $value);				
+						$value = array_map ('trim', $value);
 					}
-					
+
 					$value = (array) $value;
 				break;
 
-				case 'hidden_files':	
+				case 'hidden_files':
 					$value = (bool) $value;
 				break;
-				
+
 				default:
 					$value = (string) $value;
-				break;		
+				break;
 			}
-			
+
 			Finder::$filter[$option] = $value;
 		}
-		
+
 		return $this;
-	}			
+	}
 
 	public function find ($sortby = NULL, $asc = TRUE)
 	{
 		$this->_dit = new FilterIterator ($this->_dit);
 		$this->_rit = new RecursiveIteratorIterator ($this->_dit, RecursiveIteratorIterator::SELF_FIRST);
 		$this->_rit->setMaxDepth ($this->_max_depth);
-		
+
 		if ($sortby)
 		{
-			$this->_rit = new SorterIterator ($this->_rit, $sortby, $asc);	
+			$this->_rit = new SorterIterator ($this->_rit, $sortby, $asc);
 		}
-		
-		return $this->_get();		
+
+		return $this->_get();
 	}
-	
+
 	/**
 	 * [Generic get objects by RiT]
 	 * @param  RecursiveIteratorIterator $rit
@@ -122,7 +122,7 @@ class Finder {
 		if ( ! empty ($this->_rit))
 		{
 			$files = array ();
-			
+
 			foreach ($this->_rit as $filePath => $fileInfo)
 			{
 				if ($fileInfo->isFile())
@@ -136,21 +136,21 @@ class Finder {
 						$obj = new \stdClass;
 						$obj->path = $fileInfo->getRealPath ();
 						$obj->attrs = array ();
-						
+
 						foreach ($this->_attrs as $attr)
 						{
 							$attr = trim ($attr);
 							$method = 'get' . mb_convert_case($attr, MB_CASE_TITLE);
-							
+
 							if (method_exists ($fileInfo, $method))
 							{
 								$value = call_user_func (array (&$fileInfo, $method));
 							}
-							else 
+							else
 							{
 								continue;
 							}
-							
+
 							switch ($attr)
 							{
 								case 'owner':
@@ -159,11 +159,11 @@ class Finder {
 
 								case 'group':
 									$value = posix_getgrgid ($value);
-								break;																								
-								
+								break;
+
 								case 'perms':
 									$value = substr (sprintf ('%o', $value), -4);
-								break;																								
+								break;
 							}
 
 							$obj->attrs[$attr] = $value;
@@ -175,9 +175,9 @@ class Finder {
 				}
 			}
 
-			return $files;			
+			return $files;
 		}
-		
+
 		return FALSE;
-	}	
+	}
 }
