@@ -6,7 +6,7 @@
         "finder",
         "find files"
     ],
-    "homepage": "https://www.bitbucket.org/a-pp-zz/finder.git",
+    "homepage": "https://github.com/a-pp-zz/finder",
     "license": "MIT",
     "authors": [
         {
@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "php": ">=5.0.0",
+        "php": ">=5.3.3",
         "appzz/arr": "1.*"
     },
     "autoload": {
