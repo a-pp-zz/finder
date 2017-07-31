@@ -8,7 +8,6 @@
 ### Usage ###
 
 ```
-#!php
 $finder = Finder::factory('path/to/dir')
 			->types', ['mp4', 'mov']
 			->exclude ('(foo|bar)')
