@@ -12,7 +12,7 @@ use AppZz\Filesystem\Finder\FilterIterator;
  * @package AppZz\Filesystem
  * @author CoolSwitcher
  * @team AppZz
- * @version 2.0
+ * @version 2.0.1
  */
 class Finder {
 
@@ -225,7 +225,6 @@ class Finder {
 				case 'types':
 					$value = (array) $value;
 					$value = "#.*\.(" . implode ('|', $value) . ")$#iu";
-					$option = 'search';
 				break;
 
 				case 'hidden':
@@ -244,7 +243,7 @@ class Finder {
 				break;
 			}
 
-			if ($value) {
+			if ($option AND $value) {
 				Finder::$filter[$option] = $value;
 			}
 		}

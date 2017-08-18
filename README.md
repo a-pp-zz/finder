@@ -2,8 +2,7 @@
 
 ### Find files via RecursiveIteratorIterator ###
 
-* Search files, filter by types, sort items, ignore or not hidden files
-* 2.0
+* Search files, filter by types, sort items, ignore (or not) hidden files
 
 ### Usage ###
 

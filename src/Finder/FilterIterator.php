@@ -19,17 +19,22 @@ class FilterIterator extends RecursiveFilterIterator {
 		$filename = $this->current()->getFilename();
 		$dir      = $this->current()->getPath();
 
+		$types         = Arr::get(Finder::$filter, 'types');
 		$search        = Arr::get(Finder::$filter, 'search');
 		$exclude       = Arr::get(Finder::$filter, 'exclude');
 		$exclude_paths = Arr::get(Finder::$filter, 'exclude_paths');
 		$hidden        = Arr::get(Finder::$filter, 'hidden', FALSE);
 
-		$p1 = $p2 = $p3 = $p4 = TRUE;
+		$p0 = $p1 = $p2 = $p3 = $p4 = TRUE;
 
 		if ($this->current()->isFile())
 		{
 			if ($hidden !== TRUE AND preg_match ('#^\..*#', $filename)) {
-				$p1 = FALSE;
+				$p0 = FALSE;
+			}
+
+			if ($types) {
+				$p1 = preg_match ($types, $filename);
 			}
 
 			if ($search) {
@@ -44,7 +49,7 @@ class FilterIterator extends RecursiveFilterIterator {
 				$p4 = ! preg_match ($exclude_paths, $dir);
 			}
 
-			return ($p1 AND $p2 AND $p3 AND $p4);
+			return ($p0 AND $p1 AND $p2 AND $p3 AND $p4);
 		}
 
 	  	return TRUE;
