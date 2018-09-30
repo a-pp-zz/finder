@@ -5,6 +5,7 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use AppZz\Filesystem\Finder\SorterIterator;
 use AppZz\Filesystem\Finder\FilterIterator;
+use AppZz\Filesystem\Finder\Result;
 
 /**
  * Search files, filter by types, sort items, ignore or not hidden files
@@ -38,9 +39,9 @@ class Finder {
 	 * Filter params
 	 * @var array
 	 */
-	public static $filter = array (
+	public static $filter = [
 		'hidden'  => FALSE,
-	);
+	];
 
 	/**
 	 * Attributes array owner|group|perms|atime|mtime|ctime|size|gid|uid etc
@@ -87,73 +88,17 @@ class Finder {
 		return $this;
 	}
 
-	/**
-	 * Get files as array
-	 * @param array $attrs
-	 * @return array|bool
-	 */
-	public function get_files (array $attrs = array ())
-	{
-		if ( ! empty ($this->_rit))
-		{
-			$files = array ();
+    public function get_list ()
+    {
+        $result = new Result ($this->_rit);
+        return $result->get_files([]);
+    }
 
-			foreach ($this->_rit as $filePath => $fileInfo)
-			{
-				if ($fileInfo->isFile())
-				{
-					if (empty ($attrs))
-					{
-						$files[] = $fileInfo->getRealPath ();
-					}
-					else
-					{
-						$obj = new \stdClass;
-						$obj->path = $fileInfo->getRealPath ();
-
-						foreach ($attrs as $attr)
-						{
-							$attr = trim ($attr);
-							$method = 'get' . mb_convert_case($attr, MB_CASE_TITLE);
-
-							if (method_exists ($fileInfo, $method))
-							{
-								$value = call_user_func (array (&$fileInfo, $method));
-							}
-							else
-							{
-								continue;
-							}
-
-							switch ($attr)
-							{
-								case 'owner':
-									$value = posix_getpwuid ($value);
-								break;
-
-								case 'group':
-									$value = posix_getgrgid ($value);
-								break;
-
-								case 'perms':
-									$value = substr (sprintf ('%o', $value), -4);
-								break;
-							}
-
-							$obj->$attr = $value;
-						}
-
-						$files[] = $obj;
-						unset ($obj);
-					}
-				}
-			}
-
-			return $files;
-		}
-
-		return FALSE;
-	}
+    public function get_tree ($attrs = [], $extra = [])
+    {
+        $result = new Result ($this->_rit);
+        return $result->get_files($attrs, $extra);
+    }
 
 	/**
 	 * Include hidden files or not
