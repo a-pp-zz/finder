@@ -20,6 +20,7 @@ class FilterIterator extends RecursiveFilterIterator {
 		$dir      = $this->current()->getPath();
 
 		$types         = Arr::get(Finder::$filter, 'types');
+		$type          = Arr::get(Finder::$filter, 'type');
 		$search        = Arr::get(Finder::$filter, 'search');
 		$exclude       = Arr::get(Finder::$filter, 'exclude');
 		$exclude_paths = Arr::get(Finder::$filter, 'exclude_paths');
@@ -27,7 +28,9 @@ class FilterIterator extends RecursiveFilterIterator {
 
 		$p0 = $p1 = $p2 = $p3 = $p4 = TRUE;
 
-		if ($this->current()->isFile())
+		$check = call_user_func ([$this->current(), 'is'.mb_convert_case ($type, MB_CASE_TITLE)]);
+
+		if ($check)
 		{
 			if ($hidden !== TRUE AND preg_match ('#^\..*#', $filename)) {
 				$p0 = FALSE;

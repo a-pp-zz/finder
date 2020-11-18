@@ -1,5 +1,6 @@
 <?php
 namespace AppZz\Filesystem\Finder;
+use AppZz\Filesystem\Finder;
 use AppZz\Helpers\Arr;
 use \DateTimeZone;
 use \DateTime;
@@ -7,12 +8,13 @@ use \DateTime;
 class Result {
 
     protected $_rit;
-    protected $_type = 'file';
+    protected $_checked_method = 'isFile';
 
-    public function __construct ($rit = NULL, $type = 'file')
+    public function __construct ($rit = NULL)
     {
         $this->_rit = $rit;
-        $this->_type = $type;
+        $type       = Arr::get(Finder::$filter, 'type', 'file');
+        $this->_checked_method = 'is'.mb_convert_case($type, MB_CASE_TITLE);
     }
 
     /**
@@ -32,12 +34,8 @@ class Result {
 
             foreach ($this->_rit as $filePath => $fileInfo)
             {
-                $checked = TRUE;
-                $checkedMethod = 'is'.mb_convert_case($this->_type, MB_CASE_TITLE);
 
-                if (method_exists ($fileInfo, $checkedMethod)) {
-                    $checked = call_user_func (array (&$fileInfo, $checkedMethod));
-                }
+                $checked = call_user_func (array (&$fileInfo, $this->_checked_method));
 
                 if ($checked)
                 {

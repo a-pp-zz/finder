@@ -40,7 +40,8 @@ class Finder {
 	 * @var array
 	 */
 	public static $filter = [
-		'hidden'  => FALSE,
+		'hidden' => FALSE,
+		'type'   => 'file',
 	];
 
 	/**
@@ -88,15 +89,15 @@ class Finder {
 		return $this;
 	}
 
-    public function get_list ($type = 'file')
+    public function get_list ()
     {
-        $result = new Result ($this->_rit, $type);
+        $result = new Result ($this->_rit);
         return $result->get_files([]);
     }
 
-    public function get_tree ($attrs = [], $extra = [], $type = 'file')
+    public function get_tree ($attrs = [], $extra = [])
     {
-        $result = new Result ($this->_rit, $type);
+        $result = new Result ($this->_rit);
         return $result->get_files($attrs, $extra);
     }
 
@@ -130,6 +131,17 @@ class Finder {
 	public function types ($types = array())
 	{
 		$this->_filter ('types', $types);
+		return $this;
+	}
+
+	/**
+	 * Dir or File
+	 * @param  string $type
+	 * @return $this
+	 */
+	public function type ($type = 'file')
+	{
+		$this->_filter ('type', $type);
 		return $this;
 	}
 
@@ -174,6 +186,10 @@ class Finder {
 
 				case 'hidden':
 					$value = (bool) $value;
+				break;
+
+				case 'type':
+					$value = in_array ($value, ['dir', 'file']) ? $value : 'file';
 				break;
 
 				case 'search':
