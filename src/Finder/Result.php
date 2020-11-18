@@ -7,10 +7,12 @@ use \DateTime;
 class Result {
 
     protected $_rit;
+    protected $_type = 'file';
 
-    public function __construct ($rit = NULL)
+    public function __construct ($rit = NULL, $type = 'file')
     {
         $this->_rit = $rit;
+        $this->_type = $type;
     }
 
     /**
@@ -30,7 +32,14 @@ class Result {
 
             foreach ($this->_rit as $filePath => $fileInfo)
             {
-                if ($fileInfo->isFile())
+                $checked = TRUE;
+                $checkedMethod = 'is'.mb_convert_case($this->_type, MB_CASE_TITLE);
+
+                if (method_exists ($fileInfo, $checkedMethod)) {
+                    $checked = call_user_func (array (&$fileInfo, $checkedMethod));
+                }
+
+                if ($checked)
                 {
                     if (empty ($attrs))
                     {

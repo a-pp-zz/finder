@@ -88,15 +88,15 @@ class Finder {
 		return $this;
 	}
 
-    public function get_list ()
+    public function get_list ($type = 'file')
     {
-        $result = new Result ($this->_rit);
+        $result = new Result ($this->_rit, $type);
         return $result->get_files([]);
     }
 
-    public function get_tree ($attrs = [], $extra = [])
+    public function get_tree ($attrs = [], $extra = [], $type = 'file')
     {
-        $result = new Result ($this->_rit);
+        $result = new Result ($this->_rit, $type);
         return $result->get_files($attrs, $extra);
     }
 
