@@ -41,12 +41,16 @@ class Result {
                 {
                     if (empty ($attrs))
                     {
-                        $files[] = $fileInfo->getRealPath ();
+                        $files[] = $fileInfo->isLink () ? $fileInfo->getLinkTarget () : $fileInfo->getRealPath ();
                     }
                     else
                     {
                         $obj = [];
                         $obj['path'] = $fileInfo->getRealPath ();
+
+                        if ($fileInfo->isLink ()) {
+                            $obj['link'] = $fileInfo->getLinkTarget ();                            
+                        }
 
                         foreach ($attrs as $attr)
                         {
