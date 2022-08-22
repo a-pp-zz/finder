@@ -41,29 +41,33 @@ class Result {
                 {
                     if (empty ($attrs))
                     {
-                        $files[] = $fileInfo->isLink () ? $fileInfo->getLinkTarget () : $fileInfo->getRealPath ();
+                        $files[] = $fileInfo->getRealPath ();
                     }
                     else
                     {
                         $obj = [];
                         $obj['path'] = $fileInfo->getRealPath ();
 
-                        if ($fileInfo->isLink ()) {
-                            $obj['link'] = $fileInfo->getLinkTarget ();                            
-                        }
-
                         foreach ($attrs as $attr)
                         {
                             $attr = trim ($attr);
-                            $method = 'get' . mb_convert_case($attr, MB_CASE_TITLE);
 
-                            if (method_exists ($fileInfo, $method))
+                            if ($attr == 'relpath')
                             {
-                                $value = call_user_func (array (&$fileInfo, $method));
+                                $value = $fileInfo->getPath () . DIRECTORY_SEPARATOR . $fileInfo->getFileName ();
                             }
                             else
                             {
-                                continue;
+                                $method = 'get' . mb_convert_case($attr, MB_CASE_TITLE);
+
+                                if (method_exists ($fileInfo, $method))
+                                {
+                                    $value = call_user_func (array (&$fileInfo, $method));
+                                }
+                                else
+                                {
+                                    continue;
+                                }
                             }
 
                             switch ($attr)
