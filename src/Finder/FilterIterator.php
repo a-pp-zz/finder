@@ -15,9 +15,10 @@ class FilterIterator extends RecursiveFilterIterator {
 
 	public function accept()
 	{
-		$fullpath = $this->current()->getRealPath();
-		$filename = $this->current()->getFilename();
-		$dir      = $this->current()->getPath();
+		$fullpath  = $this->current()->getRealPath();
+		$filename  = $this->current()->getFilename();
+		$dir       = $this->current()->getPath();
+		$filemtime = $this->current()->getMTime();
 
 		$types         = Arr::get(Finder::$filter, 'types');
 		$type          = Arr::get(Finder::$filter, 'type');
@@ -25,8 +26,9 @@ class FilterIterator extends RecursiveFilterIterator {
 		$exclude       = Arr::get(Finder::$filter, 'exclude');
 		$exclude_paths = Arr::get(Finder::$filter, 'exclude_paths');
 		$hidden        = Arr::get(Finder::$filter, 'hidden', FALSE);
+		$mtime         = Arr::get(Finder::$filter, 'mtime', array());
 
-		$p0 = $p1 = $p2 = $p3 = $p4 = TRUE;
+		$p0 = $p1 = $p2 = $p3 = $p4 = $p5 = TRUE;
 
 		$check = call_user_func ([$this->current(), 'is'.mb_convert_case ($type, MB_CASE_TITLE)]);
 
@@ -52,7 +54,42 @@ class FilterIterator extends RecursiveFilterIterator {
 				$p4 = ! preg_match ($exclude_paths, $dir);
 			}
 
-			return ($p0 AND $p1 AND $p2 AND $p3 AND $p4);
+			if ( ! empty ($mtime) AND is_array ($mtime)) {
+				if (count($mtime) === 3) {
+					list ($ts_1, $ts_2, $cmp) = $mtime;
+
+					if ($ts_1 AND ! is_numeric($ts_1)) {
+						$ts_1 = strtotime ($ts_1);
+					}
+
+					if ($ts_2 AND ! is_numeric($ts_2)) {
+						$ts_2 = strtotime ($ts_2);
+					}
+
+					switch ($cmp) :
+						case 'newer':
+							$p5 = ($filemtime > $ts_1);
+						break;
+						case 'newera':
+							$p5 = ($filemtime >= $ts_1);
+						break;
+						case 'older':
+							$p5 = ($filemtime < $ts_1);
+						break;
+						case 'oldera':
+							$p5 = ($filemtime <= $ts_1);
+						break;
+						case 'between':
+							$p5 = (($filemtime > $ts_1) AND ($filemtime < $ts_2));
+						break;
+						case 'betweena':
+							$p5 = (($filemtime >= $ts_1) AND ($filemtime <= $ts_2));
+						break;
+					endswitch;
+				}
+			}
+
+			return ($p0 AND $p1 AND $p2 AND $p3 AND $p4 AND $p5);
 		}
 
 	  	return TRUE;

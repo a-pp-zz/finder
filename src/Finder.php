@@ -168,6 +168,17 @@ class Finder {
 	}
 
 	/**
+	 * Mtime params
+	 * @param  array  $value
+	 * @return $this
+	 */
+	public function mtime (array $value = array())
+	{
+		$this->_filter ('mtime', $value);
+		return $this;
+	}
+
+	/**
 	 * Filter setter
 	 * @param $option
 	 * @param mixed $value
@@ -197,6 +208,10 @@ class Finder {
 				case 'exclude_paths':
 					$value = (string) $value;
 					$value = '#' . $value . '#iu';
+				break;
+
+				case 'mtime':
+					$value = (array) $value;
 				break;
 
 				default:
